@@ -11,17 +11,17 @@ def PageRank(pages):
         delta_max = 0
         pages_new = {}
         for i in pages:
-            pages_new[i] = Page(pages[i].links, 0)
+            pages_new[i] = Page(pages[i].links, 1.0 / len(pages))
 
         for i in pages:
             for j in pages[i].links:
-                pages_new[j].rank += pages[i].rank / len(pages[j].links)
+                pages_new[j].rank += pages[i].rank / len(pages[i].links)
 
         for i in pages:
-            delta_max = max(delta_max, pages_new[i].rank / pages[i].rank)
+            delta_max = max(delta_max, abs(pages[i].rank - pages_new[i].rank) / pages[i].rank)
         pages = pages_new
 
-    return sorted(pages, key=lambda x: pages[x].rank)
+    return sorted(pages, key=lambda x: pages[x].rank, reverse=True)
 
 pages = {}
 file = open('data.txt', 'r')
@@ -31,7 +31,7 @@ for i in range(n):
     line = file.readline().split()
     name = line[0][:-1]
     links = line[1:]
-    pages[name] = Page(links, 1/n)
+    pages[name] = Page(links, 1.0 / n)
 
 pages_ranked = PageRank(pages)
 print pages_ranked
