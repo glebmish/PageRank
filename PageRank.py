@@ -1,37 +1,38 @@
-class Page:
-    """Page contains name and list of outcome links"""
-
-    def __init__(self, links, rank):
-        self.links = links
-        self.rank = rank
-
 def PageRank(pages):
+    std_rank = 1.0 / len(pages)
+    ranks = {}
+    for i in pages:
+        ranks[i] = std_rank
     delta_max = 0.5
+
     while delta_max > 0.1:
         delta_max = 0
-        pages_new = {}
+        ranks_new = {}
         for i in pages:
-            pages_new[i] = Page(pages[i].links, 1.0 / len(pages))
-
-        for i in pages:
-            for j in pages[i].links:
-                pages_new[j].rank += pages[i].rank / len(pages[i].links)
+            ranks_new[i] = std_rank
 
         for i in pages:
-            delta_max = max(delta_max, abs(pages[i].rank - pages_new[i].rank) / pages[i].rank)
-        pages = pages_new
+            for j in pages[i]:
+                ranks_new[j] += ranks[i] / len(pages[i])
 
-    return sorted(pages, key=lambda x: pages[x].rank, reverse=True)
+        for i in pages:
+            delta_max = max(delta_max, abs(ranks[i] - ranks_new[i]) / ranks[i])
+        ranks = ranks_new
 
-pages = {}
-file = open('data.txt', 'r')
+    return sorted(ranks, key = lambda x: ranks[x], reverse = True)
 
-n = int(file.readline())
-for i in range(n):
-    line = file.readline().split()
-    name = line[0][:-1]
-    links = line[1:]
-    pages[name] = Page(links, 1.0 / n)
+def __main__():
+    pages = {}
+    file = open('data.txt', 'r')
 
-pages_ranked = PageRank(pages)
-print pages_ranked
+    n = int(file.readline())
+    for i in range(n):
+        line = file.readline().split()
+        name = line[0][:-1]
+        links = line[1:]
+        pages[name] = links
+
+    pages_ranked = PageRank(pages)
+    print pages_ranked
+
+#__main__()
