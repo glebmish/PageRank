@@ -23,14 +23,14 @@ def PageRank(pages):
 
 def __main__():
     pages = {}
-    file = open('data.txt', 'r')
+    with open('data.txt', 'r') as file:
 
-    n = int(file.readline())
-    for i in range(n):
-        line = file.readline().split()
-        name = line[0][:-1]
-        links = line[1:]
-        pages[name] = links
+        n = int(file.readline())
+        for i in range(n):
+            line = file.readline().split()
+            name = line[0][:-1]
+            links = line[1:]
+            pages[name] = links
 
     pages_ranked = PageRank(pages)
     print pages_ranked
