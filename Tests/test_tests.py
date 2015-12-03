@@ -2,35 +2,35 @@ from PageRank import *
 
 def test_one():
     pages = {
-        'A': [],
+        'A': Page([]),
     }
     ranked_pages = PageRank(pages)
     assert ranked_pages == ['A']
 
 def test_two():
     pages = {
-        'A': [],
-        'B': ['A'],
+        'A': Page([]),
+        'B': Page(['A']),
     }
     ranked_pages = PageRank(pages)
     assert ranked_pages == ['A', 'B']
 
 def test_four_easy():
     pages = {
-        'A': [],
-        'B': ['A'],
-        'C': ['A'],
-        'D': ['A'],
+        'A': Page([]),
+        'B': Page(['A']),
+        'C': Page(['A']),
+        'D': Page(['A']),
     }
     ranked_pages = PageRank(pages)
     assert ranked_pages[:1] == ['A']
 
 def test_four_hard():
     pages = {
-        'A': [],
-        'B': ['A', 'C'],
-        'C': ['A'],
-        'D': ['A', 'B', 'C'],
+        'A': Page([]),
+        'B': Page(['A', 'C']),
+        'C': Page(['A']),
+        'D': Page(['A', 'B', 'C']),
     }
     ranked_pages = PageRank(pages)
     assert ranked_pages == ['A', 'C', 'B', 'D']
