@@ -1,26 +1,27 @@
+from collections import defaultdict
+
+
 class Page:
-    def __init__(self, links):
+    def __init__(self, name, links):
+        self.name = name
         self.links = links
 
-def PageRank(pages):
+
+def page_rank(pages, eps=0.1, d=0.85):
     std_rank = 1.0 / len(pages)
-    ranks = {}
-    for key in pages:
-        ranks[key] = std_rank
-    delta_max = 0.5
-    eps = 0.1
-    d = 0.85
+    ranks = defaultdict(lambda: std_rank)
+    delta_max = eps + 0.1
 
     while delta_max > eps:
         delta_max = 0
-        ranks_new = {}
-        for key in pages:
-            ranks_new[key] = std_rank
+        ranks_new = defaultdict(lambda: std_rank)
 
         for key_from in pages:
             for key_to in pages[key_from].links:
                 ranks_new[key_to] += ranks[key_from] / len(pages[key_from].links)
+            # map(lambda key_to: ranks_new[key_to] + ranks[key_from] / len(pages[key_from].list), pages[key_from].links)
 
+        # ranks_new = map(lambda key: ranks_new[key] = (1 - d) / len(pages) + d * ranks_new[key], ranks_new)
         for key in pages:
             ranks_new[key] = (1 - d) / len(pages) + d * ranks_new[key]
             delta_max = max(delta_max, abs(ranks[key] - ranks_new[key]) / ranks[key])
@@ -29,20 +30,32 @@ def PageRank(pages):
     for key in pages:
         pages[key].rank = ranks[key]
 
-    return sorted(pages, key = lambda x: pages[x].rank  , reverse = True)
+    def compare(p1, p2):
+        if pages[p1].rank < pages[p2].rank:
+            return 1
+        elif pages[p1].rank > pages[p2].rank:
+            return -1
+        elif pages[p1].name < pages[p2].name:
+            return -1
+        elif pages[p1].name > pages[p2].name:
+            return 1
+        else:
+            return 0
+
+    return sorted(pages, compare)
+
 
 def __main__():
     pages = {}
     with open('data.txt', 'r') as file:
-
         n = int(file.readline())
         for i in range(n):
             line = file.readline().split()
             name = line[0][:-1]
             links = line[1:]
-            pages[name] = Page(links)
+            pages[name] = Page(name, links)
 
-    pages_ranked = PageRank(pages)
+    pages_ranked = page_rank(pages)
     print pages_ranked
 
-#__main__()
+# __main__()

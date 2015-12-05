@@ -1,36 +1,41 @@
 from PageRank import *
 
+
 def test_one():
     pages = {
-        'A': Page([]),
+        'A': Page('A', []),
     }
-    ranked_pages = PageRank(pages)
+    ranked_pages = page_rank(pages)
     assert ranked_pages == ['A']
+
 
 def test_two():
     pages = {
-        'A': Page([]),
-        'B': Page(['A']),
+        'A': Page('A', []),
+        'B': Page('B', ['A']),
     }
-    ranked_pages = PageRank(pages)
+    ranked_pages = page_rank(pages)
     assert ranked_pages == ['A', 'B']
+
 
 def test_four_easy():
     pages = {
-        'A': Page([]),
-        'B': Page(['A']),
-        'C': Page(['A']),
-        'D': Page(['A']),
+        'A': Page('A', []),
+        'B': Page('B', ['A']),
+        'C': Page('C', ['A']),
+        'D': Page('D', ['A']),
     }
-    ranked_pages = PageRank(pages)
-    assert ranked_pages[:1] == ['A']
+    ranked_pages = page_rank(pages)
+    print ranked_pages
+    assert ranked_pages == ['A', 'B', 'C', 'D']
+
 
 def test_four_hard():
     pages = {
-        'A': Page([]),
-        'B': Page(['A', 'C']),
-        'C': Page(['A']),
-        'D': Page(['A', 'B', 'C']),
+        'A': Page('A', []),
+        'B': Page('B', ['A', 'C']),
+        'C': Page('C', ['A']),
+        'D': Page('D', ['A', 'B', 'C']),
     }
-    ranked_pages = PageRank(pages)
+    ranked_pages = page_rank(pages)
     assert ranked_pages == ['A', 'C', 'B', 'D']
