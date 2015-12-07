@@ -19,7 +19,9 @@ def page_rank(pages, eps=0.1, d=0.85):
         for key_from in pages:
             for key_to in pages[key_from].links:
                 ranks_new[key_to] += ranks[key_from] / len(pages[key_from].links)
-            # map(lambda key_to: ranks_new[key_to] + ranks[key_from] / len(pages[key_from].list), pages[key_from].links)
+            # ranks_new = defaultdict(
+            #    zip(pages[key_from].links, map(lambda key_to: ranks_new[key_to] + ranks[key_from] / len(pages[key_from].list),
+            #                                   pages[key_from].links)))
 
         # ranks_new = map(lambda key: ranks_new[key] = (1 - d) / len(pages) + d * ranks_new[key], ranks_new)
         for key in pages:
@@ -31,16 +33,7 @@ def page_rank(pages, eps=0.1, d=0.85):
         pages[key].rank = ranks[key]
 
     def compare(p1, p2):
-        if pages[p1].rank < pages[p2].rank:
-            return 1
-        elif pages[p1].rank > pages[p2].rank:
-            return -1
-        elif pages[p1].name < pages[p2].name:
-            return -1
-        elif pages[p1].name > pages[p2].name:
-            return 1
-        else:
-            return 0
+        return cmp((pages[p2].rank, pages[p1].name), (pages[p1].rank, pages[p2].name))
 
     return sorted(pages, compare)
 
