@@ -1,4 +1,5 @@
 from collections import defaultdict
+import functools
 
 
 class Page:
@@ -33,9 +34,11 @@ def page_rank(pages, eps=0.1, d=0.85):
         pages[key].rank = ranks[key]
 
     def compare(p1, p2):
-        return cmp((pages[p2].rank, pages[p1].name), (pages[p1].rank, pages[p2].name))
+        a = pages[p2].rank, pages[p1].name
+        b = pages[p1].rank, pages[p2].name
+        return (a>b)-(a<b)
 
-    return sorted(pages, compare)
+    return sorted(pages, key=functools.cmp_to_key(compare))
 
 
 def __main__():
@@ -49,6 +52,6 @@ def __main__():
             pages[name] = Page(name, links)
 
     pages_ranked = page_rank(pages)
-    print pages_ranked
+    print(pages_ranked)
 
 # __main__()
